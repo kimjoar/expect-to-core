@@ -71,6 +71,11 @@ Assertions
   ```javascript
   expect(new Date()).to(beInstanceOf(Date));
   ```
+- `beType`
+
+  ```javascript
+  expect(true).to(beType('boolean'));
+  ```
 - `match`
 
   ```javascript

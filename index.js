@@ -65,10 +65,15 @@ const beInstanceOf = (expected) => ({ actual, assert, stringify }) =>
     `Expected ${stringify(actual)} to be instance of ${fnName(expected)}`,
     `Expected ${stringify(actual)} not to be instance of ${fnName(expected)}`);
 
+const beType = (type) => ({ actual, assert, stringify }) =>
+  assert(typeof actual === type,
+    `Expected ${stringify(actual)} to be of type ${stringify(type)}, but was "${typeof actual}"`,
+    `Expected ${stringify(actual)} not to of type ${stringify(type)}, but was "${typeof actual}"`);
+
 const match = (regex) => ({ actual, assert, stringify }) =>
   assert(regex.test(actual),
     `Expected ${stringify(actual)} to match ${stringify(regex)}`,
     `Expected ${stringify(actual)} not to match ${stringify(regex)}`);
 
-export { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beNull, beUndefined, exist, beEmpty, contain, beInstanceOf, match };
+export { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beNull, beUndefined, exist, beEmpty, contain, beInstanceOf, beType, match };
 

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import expect from 'expect-to';
-import { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, match } from './';
+import { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match } from './';
 
 describe('expect-to-core', () => {
 
@@ -275,6 +275,28 @@ describe('expect-to-core', () => {
         () => expect(o).to(beInstanceOf(D)),
         (err) => err.message === 'Expected {} to be instance of D'
       );
+    });
+  });
+
+  describe('beType', () => {
+    it('succeeds for objects', () => {
+      expect({}).to(beType('object'));
+    });
+
+    it('succeeds for date', () => {
+      expect(new Date()).to(beType('object'));
+    });
+
+    it('succeeds for string', () => {
+      expect('test').to(beType('string'));
+    });
+
+    it('succeeds for undefined', () => {
+      expect(undefined).to(beType('undefined'));
+    });
+
+    it('succeeds for boolean', () => {
+      expect(true).to(beType('boolean'));
     });
   });
 
