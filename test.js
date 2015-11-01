@@ -1,6 +1,6 @@
 import assert from 'assert';
 import expect from 'expect-to';
-import { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match } from './';
+import { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match } from './src';
 
 describe('expect-to-core', () => {
 
