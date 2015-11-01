@@ -1,0 +1,27 @@
+{
+  "name": "expect-to-core",
+  "version": "0.1.0",
+  "description": "Core assertions for the assertion library expect-to",
+  "keywords": ["expect", "assert", "assertions"],
+  "main": "index.js",
+  "dependencies": {
+    "deep-equal": "^1.0.1",
+    "fn.name": "^1.0.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.0.14",
+    "babel-preset-es2015": "^6.0.14",
+    "babel-preset-stage-2": "^6.0.14",
+    "mocha": "^2.2.5",
+    "webpack": "^1.12.2"
+  },
+  "scripts": {
+    "test": "mocha --compilers js:babel-core/register; exit 0"
+  },
+  "author": "Kim Joar Bekkelund <kjbekkelund@gmail.com>",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/kjbekkelund/expect-to-core.git"
+  },
+  "license": "MIT"
+}
