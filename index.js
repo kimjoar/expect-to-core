@@ -68,7 +68,7 @@ const beInstanceOf = (expected) => ({ actual, assert, stringify }) =>
 const beType = (type) => ({ actual, assert, stringify }) =>
   assert(typeof actual === type,
     `Expected ${stringify(actual)} to be of type ${stringify(type)}, but was "${typeof actual}"`,
-    `Expected ${stringify(actual)} not to of type ${stringify(type)}, but was "${typeof actual}"`);
+    `Expected ${stringify(actual)} not to be of type ${stringify(type)}, but was "${typeof actual}"`);
 
 const match = (regex) => ({ actual, assert, stringify }) =>
   assert(regex.test(actual),
