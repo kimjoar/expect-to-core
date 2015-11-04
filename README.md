@@ -14,7 +14,7 @@ Assertions
 - `deepEqual`
 
   ```javascript
-  expect({ name: 'kim' }).to(deepEqual({ name: 'kim' }));
+  expect({ foo: 'bar' }).to(deepEqual({ foo: 'bar' }));
   ```
 - `not`
 
@@ -35,11 +35,13 @@ Assertions
 
   ```javascript
   expect('test').to(beTruthy);
+  expect(null).to(not(beTruthy));
   ```
 - `beFalsy`
 
   ```javascript
   expect('').to(beFalsy);
+  expect('foo').to(not(beFalsy));
   ```
 - `beUndefined`
 
@@ -51,10 +53,11 @@ Assertions
   ```javascript
   expect(null).to(beNull);
   ```
-- `exist`
+- `exist` (i.e. neither `null` nor `undefined`)
 
   ```javascript
   expect('test').to(exist);
+  expect(null).to(not(exist));
   ```
 - `beEmpty`
 
@@ -75,6 +78,7 @@ Assertions
 
   ```javascript
   expect(true).to(beType('boolean'));
+  expect('foo').to(beType('string'));
   ```
 - `match`
 
