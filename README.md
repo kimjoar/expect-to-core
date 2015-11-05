@@ -85,3 +85,29 @@ Assertions
   ```javascript
   expect('TeSt').to(match(/test/i));
   ```
+- `throws`
+
+  ```javascript
+  expect(() => {
+    throw new Error()
+  }).to(throws()),
+
+  expect(() => {
+    throw new Error()
+  }).to(throws(Error)),
+
+  expect(() => {
+    throw new Error('foo')
+  }).to(throws(Error, 'foo')),
+
+  expect(() => {
+    throw new Error('foo')
+  }).to(throws('foo')),
+
+  expect(() => {
+    throw new Error('foo')
+  }).to(throws(/foo/)),
+  ```
+
+I don't particularly like the name `throws`, so I'm open to suggestions.
+`throw` is sadly [not possible](http://es5.github.io/x7.html#x7.6.1.1).

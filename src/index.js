@@ -1,5 +1,7 @@
 import fnName from 'fn.name'
+import invariant from 'invariant'
 import isDeepEqual from 'deep-eql'
+import compareErrors from 'compare-errors'
 
 const not = (test) => (obj) =>
   test({ ...obj, assert: obj.assert.not })
@@ -75,4 +77,34 @@ const match = (regex) => ({ actual, assert, stringify }) =>
     `Expected ${stringify(actual)} to match ${stringify(regex)}`,
     `Expected ${stringify(actual)} not to match ${stringify(regex)}`)
 
-export { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beNull, beUndefined, exist, beEmpty, contain, beInstanceOf, beType, match }
+const throws = (expected, message) => ({ actual: fn, assert, stringify }) => {
+  invariant(typeof fn === 'function',
+    `expected function as input to assertion`)
+
+  let didThrow = false
+  try {
+    fn()
+  } catch (e) {
+    didThrow = true
+
+    if (expected != null || message != null) {
+      const res = compareErrors(expected, message)(e)
+
+      if (res.type === 'instance' || res.type === 'constructor') {
+        return assert(res.matches,
+          `Expected to throw ${res.expected} but ${res.actual} was thrown`,
+          `Expected not to throw ${res.expected}`)
+      }
+
+      return assert(res.matches,
+        `Expected to throw error matching ${res.expected} but got ${res.actual}`,
+        `Expected not to throw error matching ${res.expected}`)
+    }
+  }
+
+  return assert(didThrow,
+    `Expected function to throw`,
+    `Expected function not to throw`)
+}
+
+export { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beNull, beUndefined, exist, beEmpty, contain, beInstanceOf, beType, match, throws }

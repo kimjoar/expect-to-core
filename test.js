@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 import expect from 'expect-to'
-import { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match } from './src'
+import { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match, throws } from './src'
 
 describe('expect-to-core', () => {
   describe('equal', () => {
@@ -322,6 +322,76 @@ describe('expect-to-core', () => {
       assert.throws(
         () => expect('hola').to(match(/hello/)),
         (err) => err.message === 'Expected "hola" to match /hello/'
+      )
+    })
+  })
+
+  describe('throws', () => {
+    it('fails when not given function as actual value', () => {
+      assert.throws(
+        () => expect('test').to(throws()),
+        (err) => err.message === 'Invariant Violation: expected function as input to assertion'
+      )
+    })
+
+    it('succeeds when function throws', () => {
+      expect(() => {
+        throw new Error()
+      }).to(throws())
+    })
+
+    it('succeeds when function throws expected error', () => {
+      expect(() => {
+        throw new Error()
+      }).to(throws(Error))
+    })
+
+    it('succeeds when function throws expected message', () => {
+      expect(() => {
+        throw new Error('foo')
+      }).to(throws('foo'))
+    })
+
+    it('succeeds when function throws expected regex message', () => {
+      expect(() => {
+        throw new Error(/foo/)
+      }).to(throws('foo'))
+    })
+
+    it('fails when functions does not throw', () => {
+      assert.throws(
+        () => expect(() => {}).to(throws()),
+        (err) => err.message === 'Expected function to throw'
+      )
+    })
+
+    it('fails when expecting the wrong type', () => {
+      assert.throws(
+        () =>
+          expect(() => {
+            throw new Error()
+          }).to(throws(RangeError)),
+        (err) => err.message === 'Expected to throw RangeError but Error was thrown'
+      )
+    })
+
+    it('fails when expecting the wrong message', () => {
+      assert.throws(
+        () =>
+          expect(() => {
+            throw new Error('foo')
+          }).to(throws('bar')),
+        (err) => err.message === 'Expected to throw error matching bar but got foo'
+      )
+    })
+
+    it('fails when not matching expecting message', () => {
+      assert.throws(
+        () =>
+          expect(() => {
+            throw new Error('foo')
+          }).to(throws(/bar/)),
+        (err) => err.message === 'Expected to throw error matching /bar/ but got foo'
       )
     })
   })
