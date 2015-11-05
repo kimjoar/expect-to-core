@@ -3,6 +3,13 @@ expect-to-core
 
 Core assertions for [expect-to](https://github.com/kjbekkelund/expect-to).
 
+Installation
+------------
+
+```
+npm install --save-dev expect-to-core
+```
+
 Assertions
 ----------
 
