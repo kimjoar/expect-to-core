@@ -1,5 +1,5 @@
-import isDeepEqual from 'deep-equal'
 import fnName from 'fn.name'
+import isDeepEqual from 'deep-eql'
 
 const not = (test) => (obj) =>
   test({ ...obj, assert: obj.assert.not })

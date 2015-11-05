@@ -62,6 +62,18 @@ describe('expect-to-core', () => {
       expect(ref1).to(deepEqual(ref2))
     })
 
+    it('handles regexes', () => {
+      const ref1 = /test/
+      const ref2 = /adsf/
+      expect(ref1).to(not(deepEqual(ref2)))
+    })
+
+    it('handles arrays vs objects', () => {
+      const ref1 = []
+      const ref2 = {}
+      expect(ref1).to(not(deepEqual(ref2)))
+    })
+
     it('fails when not deeply equal', () => {
       const obj1 = { name: 'kim', arr: [1, 2] }
       const obj2 = { name: 'kim', arr: [1, 2, 3] }
