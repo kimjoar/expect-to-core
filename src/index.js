@@ -4,7 +4,7 @@ import isDeepEqual from 'deep-eql'
 import compareErrors from 'compare-errors'
 
 const not = (test) => (obj) =>
-  test({ ...obj, assert: obj.assert.not })
+  test({ ...obj, assert: obj.assert.not, not: true })
 
 const equal = (expected) => ({ actual, assert, stringify }) =>
   assert(actual === expected,

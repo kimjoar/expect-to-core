@@ -5,6 +5,17 @@ import expect from 'expect-to'
 import { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match, throws } from './src'
 
 describe('expect-to-core', () => {
+  describe('not', () => {
+    it('should set value of `not` in object', (done) => {
+      const ensureCorrectValueOfNot = ({ not: notValue }) => {
+        expect(notValue).to(equal(true))
+        done()
+      }
+
+      expect('foo').to(not(ensureCorrectValueOfNot))
+    })
+  })
+
   describe('equal', () => {
     it('succeeds when strings are equal', () => {
       expect('test').to(equal('test'))
