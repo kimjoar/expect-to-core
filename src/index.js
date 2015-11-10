@@ -15,7 +15,8 @@ const equal = (expected) => ({ actual, assert, stringify }) =>
 const deepEqual = (expected) => ({ actual, assert, stringify }) =>
   assert(isDeepEqual(actual, expected),
     `Expected ${stringify(actual)} to deep equal ${stringify(expected)}`,
-    `Expected ${stringify(actual)} not to deep equal ${stringify(expected)}`)
+    `Expected ${stringify(actual)} not to deep equal ${stringify(expected)}`,
+    expected)
 
 const beTrue = ({ actual, assert, stringify }) =>
   assert(actual === true,
