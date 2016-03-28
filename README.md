@@ -13,10 +13,10 @@ npm install --save-dev expect-to-core
 Assertions
 ----------
 
-- `equal` and `be` — does a `===` check
+- `be` — does a `===` check
 
   ```javascript
-  expect('test').to(equal('test'));
+  expect('test').to(be('test'));
   ```
 - `deepEqual` — does a deeply equal check using [`deep-eql`](https://www.npmjs.com/package/deep-eql)
 
@@ -26,7 +26,7 @@ Assertions
 - `not`
 
   ```javascript
-  expect('test').to(not(equal('testing')));
+  expect('test').to(not(be('testing')));
   ```
 - `beTruthy`
 
