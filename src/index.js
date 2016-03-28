@@ -92,5 +92,3 @@ export const throwError = (expected, message) => ({ actual: fn, assert }) => {
     'Expected function to throw',
     'Expected function not to throw')
 }
-
-export const throws = throwError
