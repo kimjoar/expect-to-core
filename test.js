@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 import expect from 'expect-to'
-import { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match, throws } from './src'
+import { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match, throwError } from './src'
 
 describe('expect-to-core', () => {
   describe('not', () => {
@@ -340,7 +340,7 @@ describe('expect-to-core', () => {
   describe('throws', () => {
     it('fails when not given function as actual value', () => {
       assert.throws(
-        () => expect('test').to(throws()),
+        () => expect('test').to(throwError()),
         (err) => err.message === 'Invariant Violation: expected function as input to assertion'
       )
     })
@@ -348,30 +348,30 @@ describe('expect-to-core', () => {
     it('succeeds when function throws', () => {
       expect(() => {
         throw new Error()
-      }).to(throws())
+      }).to(throwError())
     })
 
     it('succeeds when function throws expected error', () => {
       expect(() => {
         throw new Error()
-      }).to(throws(Error))
+      }).to(throwError(Error))
     })
 
     it('succeeds when function throws expected message', () => {
       expect(() => {
         throw new Error('foo')
-      }).to(throws('foo'))
+      }).to(throwError('foo'))
     })
 
     it('succeeds when function throws expected regex message', () => {
       expect(() => {
         throw new Error(/foo/)
-      }).to(throws('foo'))
+      }).to(throwError('foo'))
     })
 
     it('fails when functions does not throw', () => {
       assert.throws(
-        () => expect(() => {}).to(throws()),
+        () => expect(() => {}).to(throwError()),
         (err) => err.message === 'Expected function to throw'
       )
     })
@@ -381,7 +381,7 @@ describe('expect-to-core', () => {
         () =>
           expect(() => {
             throw new Error()
-          }).to(throws(RangeError)),
+          }).to(throwError(RangeError)),
         (err) => err.message === 'Expected to throw RangeError but Error was thrown'
       )
     })
@@ -391,7 +391,7 @@ describe('expect-to-core', () => {
         () =>
           expect(() => {
             throw new Error('foo')
-          }).to(throws('bar')),
+          }).to(throwError('bar')),
         (err) => err.message === 'Expected to throw error matching bar but got foo'
       )
     })
@@ -401,7 +401,7 @@ describe('expect-to-core', () => {
         () =>
           expect(() => {
             throw new Error('foo')
-          }).to(throws(/bar/)),
+          }).to(throwError(/bar/)),
         (err) => err.message === 'Expected to throw error matching /bar/ but got foo'
       )
     })

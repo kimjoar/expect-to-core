@@ -78,7 +78,7 @@ const match = (regex) => ({ actual, assert, stringify }) =>
     `Expected ${stringify(actual)} to match ${stringify(regex)}`,
     `Expected ${stringify(actual)} not to match ${stringify(regex)}`)
 
-const throws = (expected, message) => ({ actual: fn, assert, stringify }) => {
+const throwError = (expected, message) => ({ actual: fn, assert, stringify }) => {
   invariant(typeof fn === 'function',
     `expected function as input to assertion`)
 
@@ -108,4 +108,4 @@ const throws = (expected, message) => ({ actual: fn, assert, stringify }) => {
     `Expected function not to throw`)
 }
 
-export { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beNull, beUndefined, exist, beEmpty, contain, beInstanceOf, beType, match, throws }
+export { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beNull, beUndefined, exist, beEmpty, contain, beInstanceOf, beType, match, throwError }
