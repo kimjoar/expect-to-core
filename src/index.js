@@ -2,8 +2,8 @@ import fnName from 'fn.name'
 import isDeepEqual from 'deep-eql'
 import compareErrors from 'compare-errors'
 
-export const not = (test) => (obj) =>
-  test({ ...obj, assert: obj.assert.not, not: true })
+export const not = (test) => ({ assert, ...params }) =>
+  test({ ...params, assert: assert.not, not: true })
 
 export const be = (expected) => ({ actual, assert }) =>
   assert(actual === expected,
