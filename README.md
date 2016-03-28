@@ -83,22 +83,22 @@ Assertions
   ```javascript
   expect(() => {
     throw new Error()
-  }).to(throws()),
+  }).to(throwError()),
 
   expect(() => {
     throw new Error()
-  }).to(throws(Error)),
+  }).to(throwError(Error)),
 
   expect(() => {
     throw new Error('foo')
-  }).to(throws(Error, 'foo')),
+  }).to(throwError(Error, 'foo')),
 
   expect(() => {
     throw new Error('foo')
-  }).to(throws('foo')),
+  }).to(throwError('foo')),
 
   expect(() => {
     throw new Error('foo')
-  }).to(throws(/foo/)),
+  }).to(throwError(/foo/)),
   ```
 
