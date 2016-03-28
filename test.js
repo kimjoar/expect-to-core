@@ -198,14 +198,14 @@ describe('expect-to-core', () => {
     it('fails when null', () => {
       assert.throws(
         () => expect(null).to(beUndefined),
-        (err) => err.message === 'Expected [null] to be undefined'
+        (err) => err.message === 'Expected [null] to be [undefined]'
       )
     })
 
     it('fails when string', () => {
       assert.throws(
         () => expect('').to(beUndefined),
-        (err) => err.message === 'Expected "" to be undefined'
+        (err) => err.message === 'Expected "" to be [undefined]'
       )
     })
   })
@@ -218,14 +218,14 @@ describe('expect-to-core', () => {
     it('fails when undefined', () => {
       assert.throws(
         () => expect(undefined).to(beNull),
-        (err) => err.message === 'Expected [undefined] to be null'
+        (err) => err.message === 'Expected [undefined] to be [null]'
       )
     })
 
     it('fails when string', () => {
       assert.throws(
         () => expect('').to(beNull),
-        (err) => err.message === 'Expected "" to be null'
+        (err) => err.message === 'Expected "" to be [null]'
       )
     })
   })

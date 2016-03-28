@@ -12,23 +12,22 @@ export const equal = (expected) => ({ actual, assert, stringify }) =>
     `Expected ${stringify(actual)} not to equal ${stringify(expected)}`,
     expected)
 
-export const be = equal
-
 export const deepEqual = (expected) => ({ actual, assert, stringify }) =>
   assert(isDeepEqual(actual, expected),
     `Expected ${stringify(actual)} to deep equal ${stringify(expected)}`,
     `Expected ${stringify(actual)} not to deep equal ${stringify(expected)}`,
     expected)
 
-export const beTrue = ({ actual, assert, stringify }) =>
-  assert(actual === true,
-    `Expected ${stringify(actual)} to be true`,
-    `Expected ${stringify(actual)} not to be true`)
+export const be = (expected) => ({ actual, assert, stringify }) =>
+  assert(actual === expected,
+    `Expected ${stringify(actual)} to be ${stringify(expected)}`,
+    `Expected ${stringify(actual)} not to be ${stringify(expected)}`,
+    expected)
 
-export const beFalse = ({ actual, assert, stringify }) =>
-  assert(actual === false,
-    `Expected ${stringify(actual)} to be false`,
-    `Expected ${stringify(actual)} not to be false`)
+export const beTrue = be(true)
+export const beFalse = be(false)
+export const beUndefined = be(undefined)
+export const beNull = be(null)
 
 export const beTruthy = ({ actual, assert, stringify }) =>
   assert(!!actual,
@@ -39,16 +38,6 @@ export const beFalsy = ({ actual, assert, stringify }) =>
   assert(!actual,
     `Expected ${stringify(actual)} to be falsy`,
     `Expected ${stringify(actual)} not to be falsy`)
-
-export const beUndefined = ({ actual, assert, stringify }) =>
-  assert(actual === undefined,
-    `Expected ${stringify(actual)} to be undefined`,
-    `Expected ${stringify(actual)} not to be undefined`)
-
-export const beNull = ({ actual, assert, stringify }) =>
-  assert(actual === null,
-    `Expected ${stringify(actual)} to be null`,
-    `Expected ${stringify(actual)} not to be null`)
 
 export const exist = ({ actual, assert, stringify }) =>
   assert(actual != null,
