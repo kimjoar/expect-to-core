@@ -80,7 +80,7 @@ export const match = (regex) => ({ actual, assert, stringify }) =>
 
 export const throwError = (expected, message) => ({ actual: fn, assert, stringify }) => {
   invariant(typeof fn === 'function',
-    `expected function as input to assertion`)
+    'expected function as input to assertion')
 
   let didThrow = false
   try {
@@ -104,6 +104,6 @@ export const throwError = (expected, message) => ({ actual: fn, assert, stringif
   }
 
   return assert(didThrow,
-    `Expected function to throw`,
-    `Expected function not to throw`)
+    'Expected function to throw',
+    'Expected function not to throw')
 }
