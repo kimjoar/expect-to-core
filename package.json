@@ -1,6 +1,6 @@
 {
   "name": "expect-to-core",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Core assertions for the assertion library expect-to",
   "keywords": [
     "expect",
