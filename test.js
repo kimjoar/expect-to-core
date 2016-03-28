@@ -350,7 +350,7 @@ describe('expect-to-core', () => {
     it('fails when not given function as actual value', () => {
       assert.throws(
         () => expect('test').to(throwError()),
-        (err) => err.message === 'Invariant Violation: expected function as input to assertion'
+        (err) => err.message === 'expected function as input to assertion'
       )
     })
 
