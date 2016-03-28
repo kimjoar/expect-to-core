@@ -13,12 +13,12 @@ npm install --save-dev expect-to-core
 Assertions
 ----------
 
-- `equal`
+- `equal` and `be` — does a `===` check
 
   ```javascript
   expect('test').to(equal('test'));
   ```
-- `deepEqual`
+- `deepEqual` — does a deeply equal check using [`deep-eql`](https://www.npmjs.com/package/deep-eql)
 
   ```javascript
   expect({ foo: 'bar' }).to(deepEqual({ foo: 'bar' }));
@@ -27,16 +27,6 @@ Assertions
 
   ```javascript
   expect('test').to(not(equal('testing')));
-  ```
-- `beTrue`
-
-  ```javascript
-  expect(true).to(beTrue);
-  ```
-- `beFalse`
-
-  ```javascript
-  expect(false).to(beFalse);
   ```
 - `beTruthy`
 
@@ -49,16 +39,6 @@ Assertions
   ```javascript
   expect('').to(beFalsy);
   expect('foo').to(not(beFalsy));
-  ```
-- `beUndefined`
-
-  ```javascript
-  expect(undefined).to(beUndefined);
-  ```
-- `beNull`
-
-  ```javascript
-  expect(null).to(beNull);
   ```
 - `exist` (i.e. neither `null` nor `undefined`)
 
@@ -92,7 +72,7 @@ Assertions
   ```javascript
   expect('TeSt').to(match(/test/i));
   ```
-- `throws`
+- `throwError`
 
   ```javascript
   expect(() => {
@@ -116,5 +96,7 @@ Assertions
   }).to(throws(/foo/)),
   ```
 
-I don't particularly like the name `throws`, so I'm open to suggestions.
-`throw` is sadly [not possible](http://es5.github.io/x7.html#x7.6.1.1).
+There are also a few helpers, such as `beTrue`, `beFalse`, `beUndefined` and
+`beNull`. These are deprecated and will go away. Use `be(true)`, `be(null)` etc
+instead.
+
