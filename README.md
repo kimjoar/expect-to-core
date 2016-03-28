@@ -10,6 +10,12 @@ Installation
 npm install --save-dev expect-to-core
 ```
 
+These are included by default in `expect-to`, e.g.
+
+```js
+import expect, { be, deepEqual } from 'expect-to'
+```
+
 Assertions
 ----------
 
