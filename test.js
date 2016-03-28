@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 import expect from 'expect-to'
-import { not, equal, be, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match, throwError } from './src'
+import { not, equal, be, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match, throwError, throws } from './src'
 
 describe('expect-to-core', () => {
   describe('not', () => {
@@ -358,6 +358,12 @@ describe('expect-to-core', () => {
       expect(() => {
         throw new Error()
       }).to(throwError())
+    })
+
+    it('works with "throws" alias', () => {
+      expect(() => {
+        throw new Error()
+      }).to(throws())
     })
 
     it('succeeds when function throws expected error', () => {
