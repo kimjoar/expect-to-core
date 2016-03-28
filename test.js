@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 import expect from 'expect-to'
-import { not, be, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match, throwError, throws } from './src'
+import { not, be, deepEqual, beTruthy, beFalsy, exist, beEmpty, contain, beInstanceOf, beType, match, throwError, throws } from './src'
 
 describe('expect-to-core', () => {
   describe('not', () => {
@@ -95,32 +95,6 @@ describe('expect-to-core', () => {
     })
   })
 
-  describe('beTrue', () => {
-    it('succeeds when true', () => {
-      expect(true).to(beTrue)
-    })
-
-    it('fails when false', () => {
-      assert.throws(
-        () => expect(false).to(beTrue),
-        (err) => err.message === 'expect-to assertion failure: expected false to be true'
-      )
-    })
-  })
-
-  describe('beFalse', () => {
-    it('succeeds when false', () => {
-      expect(false).to(beFalse)
-    })
-
-    it('fails when true', () => {
-      assert.throws(
-        () => expect(true).to(beFalse),
-        (err) => err.message === 'expect-to assertion failure: expected true to be false'
-      )
-    })
-  })
-
   describe('beTruthy', () => {
     it('succeeds when true', () => {
       expect(true).to(beTruthy)
@@ -145,7 +119,7 @@ describe('expect-to-core', () => {
     })
   })
 
-  describe('beFalse', () => {
+  describe('beFalsy', () => {
     it('succeeds when false', () => {
       expect(false).to(beFalsy)
     })
@@ -177,46 +151,6 @@ describe('expect-to-core', () => {
       assert.throws(
         () => expect('test').to(beFalsy),
         (err) => err.message === 'Expected "test" to be falsy'
-      )
-    })
-  })
-
-  describe('beUndefined', () => {
-    it('succeeds when undefined', () => {
-      expect(undefined).to(beUndefined)
-    })
-
-    it('fails when null', () => {
-      assert.throws(
-        () => expect(null).to(beUndefined),
-        (err) => err.message === 'Expected [null] to be [undefined]'
-      )
-    })
-
-    it('fails when string', () => {
-      assert.throws(
-        () => expect('').to(beUndefined),
-        (err) => err.message === 'Expected "" to be [undefined]'
-      )
-    })
-  })
-
-  describe('beNull', () => {
-    it('succeeds when null', () => {
-      expect(null).to(beNull)
-    })
-
-    it('fails when undefined', () => {
-      assert.throws(
-        () => expect(undefined).to(beNull),
-        (err) => err.message === 'expect-to assertion failure: expected [undefined] to be [null]'
-      )
-    })
-
-    it('fails when string', () => {
-      assert.throws(
-        () => expect('').to(beNull),
-        (err) => err.message === 'expect-to assertion failure: expected "" to be [null]'
       )
     })
   })

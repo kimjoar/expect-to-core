@@ -96,7 +96,3 @@ Assertions
   }).to(throws(/foo/)),
   ```
 
-There are also a few helpers, such as `beTrue`, `beFalse`, `beUndefined` and
-`beNull`. These are deprecated and will go away. Use `be(true)`, `be(null)` etc
-instead.
-
