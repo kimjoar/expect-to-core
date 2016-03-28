@@ -1,5 +1,4 @@
 import fnName from 'fn.name'
-import invariant from 'invariant'
 import isDeepEqual from 'deep-eql'
 import compareErrors from 'compare-errors'
 
@@ -70,8 +69,9 @@ export const match = (regex) => ({ actual, assert, stringify }) =>
     `Expected ${stringify(actual)} not to match ${stringify(regex)}`)
 
 export const throwError = (expected, message) => ({ actual: fn, assert, stringify }) => {
-  invariant(typeof fn === 'function',
-    'expected function as input to assertion')
+  if (typeof fn !== 'function') {
+    throw new Error('Expected function as input to assertion')
+  }
 
   let didThrow = false
   try {
