@@ -2,7 +2,7 @@
 
 import assert from 'assert'
 import expect from 'expect-to'
-import { not, equal, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match, throwError } from './src'
+import { not, equal, be, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match, throwError } from './src'
 
 describe('expect-to-core', () => {
   describe('not', () => {
@@ -63,6 +63,15 @@ describe('expect-to-core', () => {
         () => expect(ref1).to(equal(ref2)),
         (err) => err.message === 'Expected {\n  "name": "kim"\n} to equal {\n  "name": "kim"\n}'
       )
+    })
+  })
+
+  describe('be', () => {
+    it('is an alias for "equal"', () => {
+      expect('test').to(be('test'))
+      expect(true).to(be(true))
+      expect(true).to(not(be(false)))
+      expect(undefined).to(be(undefined))
     })
   })
 

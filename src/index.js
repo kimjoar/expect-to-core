@@ -12,6 +12,8 @@ export const equal = (expected) => ({ actual, assert, stringify }) =>
     `Expected ${stringify(actual)} not to equal ${stringify(expected)}`,
     expected)
 
+export const be = equal
+
 export const deepEqual = (expected) => ({ actual, assert, stringify }) =>
   assert(isDeepEqual(actual, expected),
     `Expected ${stringify(actual)} to deep equal ${stringify(expected)}`,
