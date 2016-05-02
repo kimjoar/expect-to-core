@@ -10,13 +10,19 @@ Installation
 npm install --save-dev expect-to-core
 ```
 
+These are included by default in `expect-to`, e.g.
+
+```js
+import expect, { be, deepEqual } from 'expect-to'
+```
+
 Assertions
 ----------
 
-- `equal` and `be` — does a `===` check
+- `be` — does a `===` check
 
   ```javascript
-  expect('test').to(equal('test'));
+  expect('test').to(be('test'));
   ```
 - `deepEqual` — does a deeply equal check using [`deep-eql`](https://www.npmjs.com/package/deep-eql)
 
@@ -26,7 +32,7 @@ Assertions
 - `not`
 
   ```javascript
-  expect('test').to(not(equal('testing')));
+  expect('test').to(not(be('testing')));
   ```
 - `beTruthy`
 
@@ -77,26 +83,22 @@ Assertions
   ```javascript
   expect(() => {
     throw new Error()
-  }).to(throws()),
+  }).to(throwError()),
 
   expect(() => {
     throw new Error()
-  }).to(throws(Error)),
+  }).to(throwError(Error)),
 
   expect(() => {
     throw new Error('foo')
-  }).to(throws(Error, 'foo')),
+  }).to(throwError(Error, 'foo')),
 
   expect(() => {
     throw new Error('foo')
-  }).to(throws('foo')),
+  }).to(throwError('foo')),
 
   expect(() => {
     throw new Error('foo')
-  }).to(throws(/foo/)),
+  }).to(throwError(/foo/)),
   ```
-
-There are also a few helpers, such as `beTrue`, `beFalse`, `beUndefined` and
-`beNull`. These are deprecated and will go away. Use `be(true)`, `be(null)` etc
-instead.
 

@@ -2,13 +2,26 @@
 
 import assert from 'assert'
 import expect from 'expect-to'
-import { not, equal, be, deepEqual, beTrue, beFalse, beTruthy, beFalsy, beUndefined, beNull, exist, beEmpty, contain, beInstanceOf, beType, match, throwError, throws } from './src'
+import {
+  not,
+  be,
+  deepEqual,
+  exist,
+  contain,
+  beTruthy,
+  beFalsy,
+  beEmpty,
+  beInstanceOf,
+  beType,
+  match,
+  throwError
+} from './src'
 
 describe('expect-to-core', () => {
   describe('not', () => {
     it('should set value of `not` in object', (done) => {
       const ensureCorrectValueOfNot = ({ not: notValue }) => {
-        expect(notValue).to(equal(true))
+        expect(notValue).to(be(true))
         done()
       }
 
@@ -16,43 +29,43 @@ describe('expect-to-core', () => {
     })
   })
 
-  describe('equal', () => {
-    it('succeeds when strings are equal', () => {
-      expect('test').to(equal('test'))
+  describe('be', () => {
+    it('succeeds when strings are strictly equal', () => {
+      expect('test').to(be('test'))
     })
 
-    it('fails when strings are not equal', () => {
+    it('fails when strings are not strictly equal', () => {
       assert.throws(
-        () => expect('test').to(equal('testing')),
-        (err) => err.message === 'Expected "test" to equal "testing"'
+        () => expect('test').to(be('testing')),
+        (err) => err.message === 'expect-to assertion failure: expected \'test\' to be \'testing\''
       )
     })
 
     it('with not succeeds when strings are not equal', () => {
-      expect('test').to(not(equal('testing')))
+      expect('test').to(not(be('testing')))
     })
 
     it('with not fails when strings are equal', () => {
       assert.throws(
-        () => expect('test').to(not(equal('test'))),
-        (err) => err.message === 'Expected "test" not to equal "test"'
+        () => expect('test').to(not(be('test'))),
+        (err) => err.message === 'expect-to assertion failure: expected \'test\' not to be \'test\''
       )
     })
 
-    it('succeeds when booleans are equal', () => {
-      expect(true).to(equal(true))
+    it('succeeds when booleans are be', () => {
+      expect(true).to(be(true))
     })
 
     it('fails when booleans are not equal', () => {
       assert.throws(
-        () => expect(true).to(equal(false)),
-        (err) => err.message === 'Expected true to equal false'
+        () => expect(true).to(be(false)),
+        (err) => err.message === 'expect-to assertion failure: expected true to be false'
       )
     })
 
     it('succeeds when same reference', () => {
       const test = { name: 'kim' }
-      expect(test).to(equal(test))
+      expect(test).to(be(test))
     })
 
     it('fails when different references', () => {
@@ -60,18 +73,9 @@ describe('expect-to-core', () => {
       const ref2 = { name: 'kim' }
 
       assert.throws(
-        () => expect(ref1).to(equal(ref2)),
-        (err) => err.message === 'Expected {\n  "name": "kim"\n} to equal {\n  "name": "kim"\n}'
+        () => expect(ref1).to(be(ref2)),
+        (err) => err.message === 'expect-to assertion failure: expected { name: \'kim\' } to be { name: \'kim\' }'
       )
-    })
-  })
-
-  describe('be', () => {
-    it('is an alias for "equal"', () => {
-      expect('test').to(be('test'))
-      expect(true).to(be(true))
-      expect(true).to(not(be(false)))
-      expect(undefined).to(be(undefined))
     })
   })
 
@@ -104,32 +108,6 @@ describe('expect-to-core', () => {
     })
   })
 
-  describe('beTrue', () => {
-    it('succeeds when true', () => {
-      expect(true).to(beTrue)
-    })
-
-    it('fails when false', () => {
-      assert.throws(
-        () => expect(false).to(beTrue),
-        (err) => err.message === 'Expected false to be true'
-      )
-    })
-  })
-
-  describe('beFalse', () => {
-    it('succeeds when false', () => {
-      expect(false).to(beFalse)
-    })
-
-    it('fails when true', () => {
-      assert.throws(
-        () => expect(true).to(beFalse),
-        (err) => err.message === 'Expected true to be false'
-      )
-    })
-  })
-
   describe('beTruthy', () => {
     it('succeeds when true', () => {
       expect(true).to(beTruthy)
@@ -149,12 +127,12 @@ describe('expect-to-core', () => {
     it('fails when empty string', () => {
       assert.throws(
         () => expect('').to(beTruthy),
-        (err) => err.message === 'Expected "" to be truthy'
+        (err) => err.message === 'Expected \'\' to be truthy'
       )
     })
   })
 
-  describe('beFalse', () => {
+  describe('beFalsy', () => {
     it('succeeds when false', () => {
       expect(false).to(beFalsy)
     })
@@ -185,47 +163,7 @@ describe('expect-to-core', () => {
     it('fails when non-empty string', () => {
       assert.throws(
         () => expect('test').to(beFalsy),
-        (err) => err.message === 'Expected "test" to be falsy'
-      )
-    })
-  })
-
-  describe('beUndefined', () => {
-    it('succeeds when undefined', () => {
-      expect(undefined).to(beUndefined)
-    })
-
-    it('fails when null', () => {
-      assert.throws(
-        () => expect(null).to(beUndefined),
-        (err) => err.message === 'Expected [null] to be [undefined]'
-      )
-    })
-
-    it('fails when string', () => {
-      assert.throws(
-        () => expect('').to(beUndefined),
-        (err) => err.message === 'Expected "" to be [undefined]'
-      )
-    })
-  })
-
-  describe('beNull', () => {
-    it('succeeds when null', () => {
-      expect(null).to(beNull)
-    })
-
-    it('fails when undefined', () => {
-      assert.throws(
-        () => expect(undefined).to(beNull),
-        (err) => err.message === 'Expected [undefined] to be [null]'
-      )
-    })
-
-    it('fails when string', () => {
-      assert.throws(
-        () => expect('').to(beNull),
-        (err) => err.message === 'Expected "" to be [null]'
+        (err) => err.message === 'Expected \'test\' to be falsy'
       )
     })
   })
@@ -238,14 +176,14 @@ describe('expect-to-core', () => {
     it('fails when undefined', () => {
       assert.throws(
         () => expect(undefined).to(exist),
-        (err) => err.message === 'Expected [undefined] to exist'
+        (err) => err.message === 'Expected undefined to exist'
       )
     })
 
     it('fails when null', () => {
       assert.throws(
         () => expect(null).to(exist),
-        (err) => err.message === 'Expected [null] to exist'
+        (err) => err.message === 'Expected null to exist'
       )
     })
   })
@@ -258,7 +196,7 @@ describe('expect-to-core', () => {
     it('fails when array contains any items', () => {
       assert.throws(
         () => expect([1]).to(beEmpty),
-        (err) => err.message === 'Expected [\n  1\n] to be empty'
+        (err) => err.message === 'Expected [ 1 ] to be empty'
       )
     })
   })
@@ -271,7 +209,7 @@ describe('expect-to-core', () => {
     it('fails when array does not contain item', () => {
       assert.throws(
         () => expect([1, 2, 3]).to(contain(4)),
-        (err) => err.message === 'Expected [\n  1\n  2\n  3\n] to contain 4'
+        (err) => err.message === 'Expected [ 1, 2, 3 ] to contain 4'
       )
     })
   })
@@ -341,12 +279,12 @@ describe('expect-to-core', () => {
     it('fails when strings does not match', () => {
       assert.throws(
         () => expect('hola').to(match(/hello/)),
-        (err) => err.message === 'Expected "hola" to match /hello/'
+        (err) => err.message === 'Expected \'hola\' to match /hello/'
       )
     })
   })
 
-  describe('throws', () => {
+  describe('throwError', () => {
     it('fails when not given function as actual value', () => {
       assert.throws(
         () => expect('test').to(throwError()),
@@ -358,12 +296,6 @@ describe('expect-to-core', () => {
       expect(() => {
         throw new Error()
       }).to(throwError())
-    })
-
-    it('works with "throws" alias', () => {
-      expect(() => {
-        throw new Error()
-      }).to(throws())
     })
 
     it('succeeds when function throws expected error', () => {

@@ -2,25 +2,19 @@ import fnName from 'fn.name'
 import isDeepEqual from 'deep-eql'
 import compareErrors from 'compare-errors'
 
-export const not = (test) => (obj) =>
-  test({ ...obj, assert: obj.assert.not, not: true })
+export const not = (test) => ({ assert, ...params }) =>
+  test({ ...params, assert: assert.not, not: true })
 
-export const equal = (expected) => ({ actual, assert }) =>
+export const be = (expected) => ({ actual, assert }) =>
   assert(actual === expected,
-    ['Expected %j to equal %j', actual, expected],
-    ['Expected %j not to equal %j', actual, expected],
+    ['Expected %j to be %j', actual, expected],
+    ['Expected %j not to be %j', actual, expected],
     expected)
 
 export const deepEqual = (expected) => ({ actual, assert }) =>
   assert(isDeepEqual(actual, expected),
     ['Expected %j to deep equal %j', actual, expected],
     ['Expected %j not to deep equal %j', actual, expected],
-    expected)
-
-export const be = (expected) => ({ actual, assert }) =>
-  assert(actual === expected,
-    ['Expected %j to be %j', actual, expected],
-    ['Expected %j not to be %j', actual, expected],
     expected)
 
 export const beTrue = be(true)
@@ -98,5 +92,3 @@ export const throwError = (expected, message) => ({ actual: fn, assert }) => {
     'Expected function to throw',
     'Expected function not to throw')
 }
-
-export const throws = throwError
