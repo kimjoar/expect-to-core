@@ -55,8 +55,8 @@ export const contain = (item) => ({ actual: arr, assert }) =>
 
 export const beInstanceOf = (expected) => ({ actual, assert }) =>
   assert(actual instanceof expected,
-    ['Expected %j to be instance of %j', actual, expected],
-    ['Expected %j not to be instance of %j', actual, expected])
+    ['Expected %j to be instance of %s', actual, fnName(expected)],
+    ['Expected %j not to be instance of %s', actual, fnName(expected)])
 
 export const beType = (type) => ({ actual, assert }) =>
   assert(typeof actual === type,
@@ -84,13 +84,13 @@ export const throwError = (expected, message) => ({ actual: fn, assert }) => {
 
       if (res.type === 'instance' || res.type === 'constructor') {
         return assert(res.matches,
-          ['Expected to throw %j but %j was thrown', res.expected, res.actual],
-          ['Expected not to throw %j', res.expected])
+          ['Expected to throw %s but %s was thrown', res.expected, res.actual],
+          ['Expected not to throw %s', res.expected])
       }
 
       return assert(res.matches,
-        ['Expected to throw error matching %j but got %j', res.expected, res.actual],
-        ['Expected not to throw error matching %j', res.expected])
+        ['Expected to throw error matching %s but got %s', res.expected, res.actual],
+        ['Expected not to throw error matching %s', res.expected])
     }
   }
 
