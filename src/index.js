@@ -5,22 +5,22 @@ import compareErrors from 'compare-errors'
 export const not = (test) => (obj) =>
   test({ ...obj, assert: obj.assert.not, not: true })
 
-export const equal = (expected) => ({ actual, assert, stringify }) =>
+export const equal = (expected) => ({ actual, assert }) =>
   assert(actual === expected,
-    `Expected ${stringify(actual)} to equal ${stringify(expected)}`,
-    `Expected ${stringify(actual)} not to equal ${stringify(expected)}`,
+    ['Expected %j to equal %j', actual, expected],
+    ['Expected %j not to equal %j', actual, expected],
     expected)
 
-export const deepEqual = (expected) => ({ actual, assert, stringify }) =>
+export const deepEqual = (expected) => ({ actual, assert }) =>
   assert(isDeepEqual(actual, expected),
-    `Expected ${stringify(actual)} to deep equal ${stringify(expected)}`,
-    `Expected ${stringify(actual)} not to deep equal ${stringify(expected)}`,
+    ['Expected %j to deep equal %j', actual, expected],
+    ['Expected %j not to deep equal %j', actual, expected],
     expected)
 
-export const be = (expected) => ({ actual, assert, stringify }) =>
+export const be = (expected) => ({ actual, assert }) =>
   assert(actual === expected,
-    `Expected ${stringify(actual)} to be ${stringify(expected)}`,
-    `Expected ${stringify(actual)} not to be ${stringify(expected)}`,
+    ['Expected %j to be %j', actual, expected],
+    ['Expected %j not to be %j', actual, expected],
     expected)
 
 export const beTrue = be(true)
@@ -28,47 +28,47 @@ export const beFalse = be(false)
 export const beUndefined = be(undefined)
 export const beNull = be(null)
 
-export const beTruthy = ({ actual, assert, stringify }) =>
+export const beTruthy = ({ actual, assert }) =>
   assert(!!actual,
-    `Expected ${stringify(actual)} to be truthy`,
-    `Expected ${stringify(actual)} not to be truthy`)
+    ['Expected %j to be truthy', actual],
+    ['Expected %j not to be truthy', actual])
 
-export const beFalsy = ({ actual, assert, stringify }) =>
+export const beFalsy = ({ actual, assert }) =>
   assert(!actual,
-    `Expected ${stringify(actual)} to be falsy`,
-    `Expected ${stringify(actual)} not to be falsy`)
+    ['Expected %j to be falsy', actual],
+    ['Expected %j not to be falsy', actual])
 
-export const exist = ({ actual, assert, stringify }) =>
+export const exist = ({ actual, assert }) =>
   assert(actual != null,
-    `Expected ${stringify(actual)} to exist`,
-    `Expected ${stringify(actual)} not to exist`)
+    ['Expected %j to exist', actual],
+    ['Expected %j not to exist', actual])
 
-export const beEmpty = ({ actual, assert, stringify }) =>
+export const beEmpty = ({ actual, assert }) =>
   assert(actual.length === 0,
-    `Expected ${stringify(actual)} to be empty`,
-    `Expected ${stringify(actual)} not to be empty`)
+    ['Expected %j to be empty', actual],
+    ['Expected %j not to be empty', actual])
 
-export const contain = (item) => ({ actual: arr, assert, stringify }) =>
+export const contain = (item) => ({ actual: arr, assert }) =>
   assert(arr.indexOf(item) > -1,
-    `Expected ${stringify(arr)} to contain ${stringify(item)}`,
-    `Expected ${stringify(arr)} not to contain ${stringify(item)}`)
+    ['Expected %j to contain %j', arr, item],
+    ['Expected %j not to contain %j', arr, item])
 
-export const beInstanceOf = (expected) => ({ actual, assert, stringify }) =>
+export const beInstanceOf = (expected) => ({ actual, assert }) =>
   assert(actual instanceof expected,
-    `Expected ${stringify(actual)} to be instance of ${fnName(expected)}`,
-    `Expected ${stringify(actual)} not to be instance of ${fnName(expected)}`)
+    ['Expected %j to be instance of %s', actual, fnName(expected)],
+    ['Expected %j not to be instance of %s', actual, fnName(expected)])
 
-export const beType = (type) => ({ actual, assert, stringify }) =>
+export const beType = (type) => ({ actual, assert }) =>
   assert(typeof actual === type,
-    `Expected ${stringify(actual)} to be of type ${stringify(type)}, but was "${typeof actual}"`,
-    `Expected ${stringify(actual)} not to be of type ${stringify(type)}, but was "${typeof actual}"`)
+    ['Expected %j to be of type %j, but was %j', actual, type, typeof actual],
+    ['Expected %j not to be of type %j, but was %j', actual, type, typeof actual])
 
-export const match = (regex) => ({ actual, assert, stringify }) =>
+export const match = (regex) => ({ actual, assert }) =>
   assert(regex.test(actual),
-    `Expected ${stringify(actual)} to match ${stringify(regex)}`,
-    `Expected ${stringify(actual)} not to match ${stringify(regex)}`)
+    ['Expected %j to match %j', actual, regex],
+    ['Expected %j not to match %j', actual, regex])
 
-export const throwError = (expected, message) => ({ actual: fn, assert, stringify }) => {
+export const throwError = (expected, message) => ({ actual: fn, assert }) => {
   if (typeof fn !== 'function') {
     throw new Error('Expected function as input to assertion')
   }
@@ -84,13 +84,13 @@ export const throwError = (expected, message) => ({ actual: fn, assert, stringif
 
       if (res.type === 'instance' || res.type === 'constructor') {
         return assert(res.matches,
-          `Expected to throw ${res.expected} but ${res.actual} was thrown`,
-          `Expected not to throw ${res.expected}`)
+          ['Expected to throw %s but %s was thrown', res.expected, res.actual],
+          ['Expected not to throw %s', res.expected])
       }
 
       return assert(res.matches,
-        `Expected to throw error matching ${res.expected} but got ${res.actual}`,
-        `Expected not to throw error matching ${res.expected}`)
+        ['Expected to throw error matching %s but got %s', res.expected, res.actual],
+        ['Expected not to throw error matching %s', res.expected])
     }
   }
 
