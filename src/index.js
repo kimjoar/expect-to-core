@@ -17,11 +17,6 @@ export const deepEqual = (expected) => ({ actual, assert }) =>
     ['Expected %j not to deep equal %j', actual, expected],
     expected)
 
-export const beTrue = be(true)
-export const beFalse = be(false)
-export const beUndefined = be(undefined)
-export const beNull = be(null)
-
 export const beTruthy = ({ actual, assert }) =>
   assert(!!actual,
     ['Expected %j to be truthy', actual],
