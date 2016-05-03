@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 
 import assert from 'assert'
-import expect from 'expect-to'
+import sinon from 'sinon'
 import {
   not,
   be,
@@ -17,224 +17,441 @@ import {
   throwError
 } from './src'
 
-describe('expect-to-core', () => {
-  describe('not', () => {
-    it('should set value of `not` in object', (done) => {
-      const ensureCorrectValueOfNot = ({ not: notValue }) => {
-        expect(notValue).to(be(true))
-        done()
-      }
+const extractAssert = (spy) => spy.args[0][0]
 
-      expect('foo').to(not(ensureCorrectValueOfNot))
+describe('expect-to-core', () => {
+  describe('#not', () => {
+    it('should set value of `not` in object', () => {
+      const spy = sinon.spy()
+
+      const _assert = {
+        not: {}
+      }
+      const actual = {}
+
+      not(spy)({
+        actual: actual,
+        assert: _assert
+      })
+
+      const args = spy.firstCall.args
+
+      assert.equal(args.length, 1)
+      assert.strictEqual(args[0].actual, actual)
+      assert.strictEqual(args[0].assert, _assert.not)
+      assert.strictEqual(args[0].not, true)
     })
   })
 
-  describe('be', () => {
+  describe('#be', () => {
     it('succeeds when strings are strictly equal', () => {
-      expect('test').to(be('test'))
+      const spy = sinon.spy()
+
+      be('test')({
+        actual: 'test',
+        assert: spy
+      })
+
+      sinon.assert.calledWithExactly(
+        spy,
+        true,
+        ['Expected %j to be %j', 'test', 'test'],
+        ['Expected %j not to be %j', 'test', 'test'],
+        'test'
+      )
     })
 
     it('fails when strings are not strictly equal', () => {
-      assert.throws(
-        () => expect('test').to(be('testing')),
-        (err) => err.message === 'expect-to assertion failure: expected \'test\' to be \'testing\''
-      )
+      const spy = sinon.spy()
+
+      be('test')({
+        actual: 'testing',
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
 
     it('with not succeeds when strings are not equal', () => {
-      expect('test').to(not(be('testing')))
+      const spy = sinon.spy()
+
+      not(be('test'))({
+        actual: 'testing',
+        assert: { not: spy }
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
 
     it('with not fails when strings are equal', () => {
-      assert.throws(
-        () => expect('test').to(not(be('test'))),
-        (err) => err.message === 'expect-to assertion failure: expected \'test\' not to be \'test\''
-      )
+      const spy = sinon.spy()
+
+      not(be('test'))({
+        actual: 'test',
+        assert: { not: spy }
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds when booleans are be', () => {
-      expect(true).to(be(true))
+      const spy = sinon.spy()
+
+      be(true)({
+        actual: true,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('fails when booleans are not equal', () => {
-      assert.throws(
-        () => expect(true).to(be(false)),
-        (err) => err.message === 'expect-to assertion failure: expected true to be false'
-      )
+      const spy = sinon.spy()
+
+      be(true)({
+        actual: false,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
 
     it('succeeds when same reference', () => {
       const test = { name: 'kim' }
-      expect(test).to(be(test))
+      const spy = sinon.spy()
+
+      be(test)({
+        actual: test,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('fails when different references', () => {
       const ref1 = { name: 'kim' }
       const ref2 = { name: 'kim' }
 
-      assert.throws(
-        () => expect(ref1).to(be(ref2)),
-        (err) => err.message === 'expect-to assertion failure: expected { name: \'kim\' } to be { name: \'kim\' }'
-      )
+      const spy = sinon.spy()
+
+      be(ref1)({
+        actual: ref2,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
   })
 
-  describe('deepEqual', () => {
+  describe('#deepEqual', () => {
     it('succeeds when deeply equal', () => {
       const ref1 = { name: 'kim', arr: [1, 2, 3] }
       const ref2 = { name: 'kim', arr: [1, 2, 3] }
-      expect(ref1).to(deepEqual(ref2))
+      const spy = sinon.spy()
+
+      deepEqual(ref1)({
+        actual: ref2,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('handles regexes', () => {
       const ref1 = /test/
       const ref2 = /adsf/
-      expect(ref1).to(not(deepEqual(ref2)))
+      const spy = sinon.spy()
+
+      deepEqual(ref1)({
+        actual: ref2,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
 
     it('handles arrays vs objects', () => {
       const ref1 = []
       const ref2 = {}
-      expect(ref1).to(not(deepEqual(ref2)))
+      const spy = sinon.spy()
+
+      deepEqual(ref1)({
+        actual: ref2,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
 
     it('fails when not deeply equal', () => {
       const obj1 = { name: 'kim', arr: [1, 2] }
       const obj2 = { name: 'kim', arr: [1, 2, 3] }
 
-      assert.throws(() => {
-        expect(obj1).to(deepEqual(obj2))
+      const spy = sinon.spy()
+
+      deepEqual(obj1)({
+        actual: obj2,
+        assert: spy
       })
+
+      assert.equal(extractAssert(spy), false)
     })
   })
 
-  describe('beTruthy', () => {
+  describe('#beTruthy', () => {
     it('succeeds when true', () => {
-      expect(true).to(beTruthy)
+      const spy = sinon.spy()
+
+      beTruthy({
+        actual: true,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds when non-empty string', () => {
-      expect('test').to(beTruthy)
+      const spy = sinon.spy()
+
+      beTruthy({
+        actual: 'test',
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('fails when false', () => {
-      assert.throws(
-        () => expect(false).to(beTruthy),
-        (err) => err.message === 'Expected false to be truthy'
-      )
+      const spy = sinon.spy()
+
+      beTruthy({
+        actual: false,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
 
     it('fails when empty string', () => {
-      assert.throws(
-        () => expect('').to(beTruthy),
-        (err) => err.message === 'Expected \'\' to be truthy'
-      )
+      const spy = sinon.spy()
+
+      beTruthy({
+        actual: '',
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
   })
 
-  describe('beFalsy', () => {
+  describe('#beFalsy', () => {
     it('succeeds when false', () => {
-      expect(false).to(beFalsy)
+      const spy = sinon.spy()
+
+      beFalsy({
+        actual: false,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds when empty string', () => {
-      expect('').to(beFalsy)
+      const spy = sinon.spy()
+
+      beFalsy({
+        actual: '',
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds when null', () => {
-      expect(null).to(beFalsy)
+      const spy = sinon.spy()
+
+      beFalsy({
+        actual: null,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds when undefined', () => {
-      expect(undefined).to(beFalsy)
+      const spy = sinon.spy()
+
+      beFalsy({
+        actual: undefined,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds when number 0', () => {
-      expect(0).to(beFalsy)
+      const spy = sinon.spy()
+
+      beFalsy({
+        actual: 0,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('fails when true', () => {
-      assert.throws(
-        () => expect(true).to(beFalsy),
-        (err) => err.message === 'Expected true to be falsy'
-      )
+      const spy = sinon.spy()
+
+      beFalsy({
+        actual: true,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
 
     it('fails when non-empty string', () => {
-      assert.throws(
-        () => expect('test').to(beFalsy),
-        (err) => err.message === 'Expected \'test\' to be falsy'
-      )
+      const spy = sinon.spy()
+
+      beFalsy({
+        actual: 'test',
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
   })
 
-  describe('exist', () => {
+  describe('#exist', () => {
     it('succeeds when string', () => {
-      expect('test').to(exist)
+      const spy = sinon.spy()
+
+      exist({
+        actual: 'test',
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('fails when undefined', () => {
-      assert.throws(
-        () => expect(undefined).to(exist),
-        (err) => err.message === 'Expected undefined to exist'
-      )
+      const spy = sinon.spy()
+
+      exist({
+        actual: undefined,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
 
     it('fails when null', () => {
-      assert.throws(
-        () => expect(null).to(exist),
-        (err) => err.message === 'Expected null to exist'
-      )
+      const spy = sinon.spy()
+
+      exist({
+        actual: null,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
   })
 
-  describe('beEmpty', () => {
+  describe('#beEmpty', () => {
     it('succeeds when array is empty', () => {
-      expect([]).to(beEmpty)
+      const spy = sinon.spy()
+
+      beEmpty({
+        actual: [],
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('fails when array contains any items', () => {
-      assert.throws(
-        () => expect([1]).to(beEmpty),
-        (err) => err.message === 'Expected [ 1 ] to be empty'
-      )
+      const spy = sinon.spy()
+
+      beEmpty({
+        actual: [1],
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
   })
 
-  describe('contain', () => {
+  describe('#contain', () => {
     it('succeeds when array contains item', () => {
-      expect([1, 2, 3]).to(contain(1))
+      const spy = sinon.spy()
+
+      contain(1)({
+        actual: [1, 2, 3],
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('fails when array does not contain item', () => {
-      assert.throws(
-        () => expect([1, 2, 3]).to(contain(4)),
-        (err) => err.message === 'Expected [ 1, 2, 3 ] to contain 4'
-      )
+      const spy = sinon.spy()
+
+      contain(4)({
+        actual: [1, 2, 3],
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
   })
 
-  describe('beInstanceOf', () => {
+  describe('#beInstanceOf', () => {
     it('succeeds for dates', () => {
-      expect(new Date()).to(beInstanceOf(Date))
+      const spy = sinon.spy()
+
+      beInstanceOf(Date)({
+        actual: new Date(),
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds for objects', () => {
-      expect({}).to(beInstanceOf(Object))
+      const spy = sinon.spy()
+
+      beInstanceOf(Object)({
+        actual: {},
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds for constructor functions', () => {
       function C () {}
       var o = new C()
 
-      expect(o).to(beInstanceOf(C))
+      const spy = sinon.spy()
+
+      beInstanceOf(C)({
+        actual: o,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('fails when type does not match', () => {
-      assert.throws(
-        () => expect({}).to(beInstanceOf(String)),
-        (err) => err.message === 'Expected {} to be instance of String'
-      )
+      const spy = sinon.spy()
+
+      beInstanceOf(String)({
+        actual: {},
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
 
     it('fails when different constructor function', () => {
@@ -242,115 +459,230 @@ describe('expect-to-core', () => {
       function D () {}
       var o = new C()
 
-      assert.throws(
-        () => expect(o).to(beInstanceOf(D)),
-        (err) => err.message === 'Expected {} to be instance of D'
-      )
+      const spy = sinon.spy()
+
+      beInstanceOf(D)({
+        actual: o,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
   })
 
-  describe('beType', () => {
+  describe('#beType', () => {
     it('succeeds for objects', () => {
-      expect({}).to(beType('object'))
+      const spy = sinon.spy()
+
+      beType('object')({
+        actual: {},
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds for date', () => {
-      expect(new Date()).to(beType('object'))
+      const spy = sinon.spy()
+
+      beType('object')({
+        actual: new Date(),
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds for string', () => {
-      expect('test').to(beType('string'))
+      const spy = sinon.spy()
+
+      beType('string')({
+        actual: 'test',
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds for undefined', () => {
-      expect(undefined).to(beType('undefined'))
+      const spy = sinon.spy()
+
+      beType('undefined')({
+        actual: undefined,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('succeeds for boolean', () => {
-      expect(true).to(beType('boolean'))
+      const spy = sinon.spy()
+
+      beType('boolean')({
+        actual: true,
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
   })
 
-  describe('match', () => {
+  describe('#match', () => {
     it('succeeds when strings match', () => {
-      expect('Hello').to(match(/hello/i))
+      const spy = sinon.spy()
+
+      match(/hello/i)({
+        actual: 'Hello',
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), true)
     })
 
     it('fails when strings does not match', () => {
-      assert.throws(
-        () => expect('hola').to(match(/hello/)),
-        (err) => err.message === 'Expected \'hola\' to match /hello/'
-      )
+      const spy = sinon.spy()
+
+      match(/hello/i)({
+        actual: 'hola',
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
   })
 
-  describe('throwError', () => {
+  describe('#throwError', () => {
     it('fails when not given function as actual value', () => {
+      const spy = sinon.spy()
+
       assert.throws(
-        () => expect('test').to(throwError()),
+        () =>
+          throwError()({
+            actual: 'test',
+            assert: spy
+          }),
         (err) => err.message === 'Expected function as input to assertion'
       )
+
+      sinon.assert.notCalled(spy)
     })
 
     it('succeeds when function throws', () => {
-      expect(() => {
-        throw new Error()
-      }).to(throwError())
+      const spy = sinon.spy()
+
+      throwError()({
+        actual: () => { throw new Error() },
+        assert: spy
+      })
+
+      sinon.assert.calledWithExactly(
+        spy,
+        true,
+        'Expected function to throw',
+        'Expected function not to throw'
+      )
     })
 
     it('succeeds when function throws expected error', () => {
-      expect(() => {
-        throw new Error()
-      }).to(throwError(Error))
+      const spy = sinon.spy()
+
+      throwError(Error)({
+        actual: () => { throw new Error() },
+        assert: spy
+      })
+
+      sinon.assert.calledWithExactly(
+        spy,
+        true,
+        ['Expected to throw %s but %s was thrown', 'Error', 'Error'],
+        ['Expected not to throw %s', 'Error']
+      )
     })
 
     it('succeeds when function throws expected message', () => {
-      expect(() => {
-        throw new Error('foo')
-      }).to(throwError('foo'))
+      const spy = sinon.spy()
+
+      throwError('foo')({
+        actual: () => { throw new Error('foo') },
+        assert: spy
+      })
+
+      sinon.assert.calledWithExactly(
+        spy,
+        true,
+        ['Expected to throw error matching %s but got %s', 'foo', 'foo'],
+        ['Expected not to throw error matching %s', 'foo']
+      )
     })
 
     it('succeeds when function throws expected regex message', () => {
-      expect(() => {
-        throw new Error(/foo/)
-      }).to(throwError('foo'))
+      const spy = sinon.spy()
+
+      throwError(/foo/)({
+        actual: () => { throw new Error('foo') },
+        assert: spy
+      })
+
+      sinon.assert.calledWithExactly(
+        spy,
+        true,
+        ['Expected to throw error matching %s but got %s', /foo/, 'foo'],
+        ['Expected not to throw error matching %s', /foo/]
+      )
     })
 
     it('fails when functions does not throw', () => {
-      assert.throws(
-        () => expect(() => {}).to(throwError()),
-        (err) => err.message === 'Expected function to throw'
+      const spy = sinon.spy()
+
+      throwError()({
+        actual: () => {},
+        assert: spy
+      })
+
+      sinon.assert.calledWithExactly(
+        spy,
+        false,
+        'Expected function to throw',
+        'Expected function not to throw'
       )
     })
 
     it('fails when expecting the wrong type', () => {
-      assert.throws(
-        () =>
-          expect(() => {
-            throw new Error()
-          }).to(throwError(RangeError)),
-        (err) => err.message === 'Expected to throw RangeError but Error was thrown'
+      const spy = sinon.spy()
+
+      throwError(RangeError)({
+        actual: () => { throw new Error() },
+        assert: spy
+      })
+
+      sinon.assert.calledWithExactly(
+        spy,
+        false,
+        ['Expected to throw %s but %s was thrown', 'RangeError', 'Error'],
+        ['Expected not to throw %s', 'RangeError']
       )
     })
 
     it('fails when expecting the wrong message', () => {
-      assert.throws(
-        () =>
-          expect(() => {
-            throw new Error('foo')
-          }).to(throwError('bar')),
-        (err) => err.message === 'Expected to throw error matching bar but got foo'
-      )
+      const spy = sinon.spy()
+
+      throwError(RangeError)({
+        actual: () => { throw new Error() },
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
 
     it('fails when not matching expecting message', () => {
-      assert.throws(
-        () =>
-          expect(() => {
-            throw new Error('foo')
-          }).to(throwError(/bar/)),
-        (err) => err.message === 'Expected to throw error matching /bar/ but got foo'
-      )
+      const spy = sinon.spy()
+
+      throwError(/bar/)({
+        actual: () => { throw new Error('foo') },
+        assert: spy
+      })
+
+      assert.equal(extractAssert(spy), false)
     })
   })
 })
